@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 from books import books
@@ -40,6 +40,10 @@ def get_books_by_author(author: str):
 
 @app.post("/books")
 def create_book(book: Book):
+    for existing_book in books:
+        if existing_book["id"] == book.id:
+            raise HTTPException(status_code=400, detail="Book id already exists")
+
     books.append(book.model_dump())
 
     return {"message": "Book added"}
@@ -67,17 +71,24 @@ def search_books(author: str):
 
 @app.put("/books/{book_id}")
 def update_book(book_id: int, updated_book: Book):
-    updated = False
+    book_index = None
 
     for index, book in enumerate(books):
         if book["id"] == book_id:
-            books[index] = updated_book.model_dump()
-            updated = True
+            book_index = index
+            break
 
-    if updated:
-        return {"message": "Updated"}
+    if book_index is None:
+        return {"error": "Book not found"}
 
-    return {"error": "Book not found"}
+    if updated_book.id != book_id:
+        for existing_index, existing_book in enumerate(books):
+            if existing_book["id"] == updated_book.id and existing_index != book_index:
+                raise HTTPException(status_code=400, detail="Book id already exists")
+
+    books[book_index] = updated_book.model_dump()
+
+    return {"message": "Updated"}
 
 
 @app.delete("/books/{book_id}")
