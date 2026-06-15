@@ -22,6 +22,22 @@ def get_books():
     return books
 
 
+@app.get("/books/count")
+def get_books_count():
+    return {"count": len(books)}
+
+
+@app.get("/books/author/{author}")
+def get_books_by_author(author: str):
+    result = []
+
+    for book in books:
+        if book["author"].lower() == author.lower():
+            result.append(book)
+
+    return result
+
+
 @app.post("/books")
 def create_book(book: Book):
     books.append(book.model_dump())

@@ -29,4 +29,24 @@ books = [
         "title": "Python Crash Course",
         "author": "Eric Matthes",
     },
+    {
+        "id": 7,
+        "title": "Introduction to Algorithms",
+        "author": "Thomas H. Cormen",
+    },
+    {
+        "id": 8,
+        "title": "Design Patterns",
+        "author": "Erich Gamma",
+    },
+    {
+        "id": 9,
+        "title": "Grokking Algorithms",
+        "author": "Aditya Bhargava",
+    },
+    {
+        "id": 10,
+        "title": "Deep Learning with Python",
+        "author": "Francois Chollet",
+    },
 ]
