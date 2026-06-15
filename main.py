@@ -67,19 +67,29 @@ def search_books(author: str):
 
 @app.put("/books/{book_id}")
 def update_book(book_id: int, updated_book: Book):
+    updated = False
+
     for index, book in enumerate(books):
         if book["id"] == book_id:
             books[index] = updated_book.model_dump()
-            return {"message": "Updated"}
+            updated = True
+
+    if updated:
+        return {"message": "Updated"}
 
     return {"error": "Book not found"}
 
 
 @app.delete("/books/{book_id}")
 def delete_book(book_id: int):
-    for index, book in enumerate(books):
-        if book["id"] == book_id:
+    removed = False
+
+    for index in range(len(books) - 1, -1, -1):
+        if books[index]["id"] == book_id:
             books.pop(index)
-            return {"message": "Deleted"}
+            removed = True
+
+    if removed:
+        return {"message": "Deleted"}
 
     return {"error": "Book not found"}
